@@ -1,0 +1,24 @@
+{
+  "name": "hackathon1",
+  "version": "1.0.0",
+  "description": "Checks for local changes",
+  "main": "fileCheck.js",
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \\\"Error: no test specified\\\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ekkuan/Hackathon1.git"
+  },
+  "keywords": [
+    "hackathon1"
+  ],
+  "author": "Eric Kuan & Nathaniel Chiu",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ekkuan/Hackathon1/issues"
+  },
+  "homepage": "https://github.com/ekkuan/Hackathon1#readme"
+}
