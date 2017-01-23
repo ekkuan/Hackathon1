@@ -1,7 +1,25 @@
 var chokidar = require('chokidar');
+var express = require('express')
+var sharp = require('sharp')
+var AWS = require('aws-sdk')
+const uuidV1 = require('uuid/v1');
+var fs = require('fs')
+var s3 = new AWS.S3();
+
+// For details and examples about AWS Node SDK,
+// please see https://aws.amazon.com/sdk-for-node-js/
+
+var myBucket = 'cs499-h1';
+var app = express()
 
 var watcher = chokidar.watch('file, dir, or glob', {
   ignored: /[\/\\]\./, persistent: true
+});
+
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
 });
 
 var log = console.log.bind(console);
@@ -35,7 +53,7 @@ watcher.close();
 // One-liner
 require('chokidar').watch('.', {ignored: /[\/\\]\./}).on('all', function(event, path) {
   if(event=="add"){
-  	console.log("File added to S3");
+  	uploadFileToS3(path)
   } else if (event=="unlink") {
   	console.log("File removed from S3");
   } else if (event=="change") {
@@ -44,7 +62,19 @@ require('chokidar').watch('.', {ignored: /[\/\\]\./}).on('all', function(event, 
   console.log(event, path);
 });
 
-
+function uploadFileToS3(imageFilePath) {
+	fs.readFile(imageFilePath, function(err, data) {
+		params = {Bucket: myBucket, Key: imageFilePath, Body: data, ACL: "public-read", ContentType: "image/png"};
+	    s3.putObject(params, function(err, data) {
+	         if (err) {
+	             console.log(err)
+	         } else {
+	             console.log("Successfully uploaded data to " + myBucket, data);
+	             fs.unlink(imageFilePath);
+	         }
+	    });
+	});
+}
 
 
 
