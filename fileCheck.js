@@ -34,5 +34,32 @@ watcher.close();
 
 // One-liner
 require('chokidar').watch('.', {ignored: /[\/\\]\./}).on('all', function(event, path) {
+  if(event=="add"){
+  	console.log("File added to S3");
+  } else if (event=="unlink") {
+  	console.log("File removed from S3");
+  } else if (event=="change") {
+  	console.log("File Updated")
+  }
   console.log(event, path);
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
