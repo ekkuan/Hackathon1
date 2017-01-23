@@ -70,7 +70,7 @@ function uploadFileToS3(imageFilePath) {
 	             console.log(err)
 	         } else {
 	             console.log("Successfully uploaded data to " + myBucket, data);
-	             fs.unlink(imageFilePath);
+	           
 	         }
 	    });
 	});
