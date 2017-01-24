@@ -56,7 +56,8 @@ require('chokidar').watch('.', {ignored: /[\/\\]\./}).on('all', function(event, 
   } else if (event=="unlink") {
 	deleteFileFromS3(path)
   } else if (event=="change") {
-  	console.log("File Updated")
+  	//console.log("File Updated")
+  	updateFileToS3(path)
   }
   console.log(event, path);
 });
@@ -81,7 +82,7 @@ function deleteFileFromS3(imageFilePath) {
     	};
     	s3.deleteObject(params, function (err, data) {
         if (data) {
-            console.log("File removed successfully from " + myBucket, data);
+            console.log("File removed successfully from " + myBucket);
         }
         else {
             console.log("Check if you have sufficient permissions : "+err);
@@ -89,7 +90,22 @@ function deleteFileFromS3(imageFilePath) {
     });
 }
 
+function updateFileToS3(imageFilePath) {
+	fs.readFile(imageFilePath, function(err, data) {
+                params = {Bucket: myBucket, Key: imageFilePath, Body: data, ACL: "public-read", ContentType: "image/png"};
+            s3.putObject(params, function(err, data) {
+                 if (err) {
+                     console.log(err)
+                 } else {
+                     console.log("Successfully updated data to " + myBucket, data);
+                 }
+            });
+        });
+}
 
+app.listen(3000, function() {
+	console.log('FileCheck app listening on port 3000!')
+})
 
 
 
