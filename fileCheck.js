@@ -1,6 +1,5 @@
 var chokidar = require('chokidar');
 var express = require('express')
-var sharp = require('sharp')
 var AWS = require('aws-sdk')
 const uuidV1 = require('uuid/v1');
 var fs = require('fs')
@@ -55,7 +54,7 @@ require('chokidar').watch('.', {ignored: /[\/\\]\./}).on('all', function(event, 
   if(event=="add"){
   	uploadFileToS3(path)
   } else if (event=="unlink") {
-  	console.log("File removed from S3");
+	deleteFileFromS3(path)
   } else if (event=="change") {
   	console.log("File Updated")
   }
@@ -70,13 +69,25 @@ function uploadFileToS3(imageFilePath) {
 	             console.log(err)
 	         } else {
 	             console.log("Successfully uploaded data to " + myBucket, data);
-	           
 	         }
 	    });
 	});
 }
 
-
+function deleteFileFromS3(imageFilePath) {
+	var params = {
+        	Bucket: myBucket ,
+        	Key: imageFilePath
+    	};
+    	s3.deleteObject(params, function (err, data) {
+        if (data) {
+            console.log("File removed successfully from " + myBucket, data);
+        }
+        else {
+            console.log("Check if you have sufficient permissions : "+err);
+        }
+    });
+}
 
 
 
