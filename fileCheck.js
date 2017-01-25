@@ -21,22 +21,11 @@ app.get('/list', function(req, res){
   };
   s3.listObjects(params,  function(err, data){    
     for(var i = 0; i < data.Contents.length; i++) {
-      data.Contents[i].Key ='//t//n'+data.Contents[i].Key+'\\n';
-      data.Contents[i].LastModified += '\\n';
-      data.Contents[i].ETag += '\\n';
-      data.Contents[i].Size += '\\n';
-      data.Contents[i].StorageClass += '\\n';
       data.Contents[i].Url = 'https://s3-us-west-1.amazonaws.com/' + data.Name + '/' + data.Contents[i].Key;
     }   
     res.send(data.Contents);
   })
 })
-
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
-});
 
 var log = console.log.bind(console);
 
