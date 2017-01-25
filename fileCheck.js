@@ -11,6 +11,12 @@ var s3 = new AWS.S3();
 var myBucket = 'cs499-h1';
 var app = express()
 
+app.use(function(req, res, next){
+  res.header("Access-Control-Allow-Origin","*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
 var watcher = chokidar.watch('file, dir, or glob', {
   ignored: /[\/\\]\./, persistent: true
 });
@@ -109,14 +115,10 @@ function updateFileToS3(imageFilePath) {
         });
 }
 
-app.use(function(req, res, next){
-	res.header("Access-Control-Allow-Origin","*");
-	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-	next();
-});
+
 
 app.listen(3000, function() {
-	console.log('FileCheck app listening on port 3000!')
+	console.log('FileCheck app listening on port 3000!');
 })
 
 
